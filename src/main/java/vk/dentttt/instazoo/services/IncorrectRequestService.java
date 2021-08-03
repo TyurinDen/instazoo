@@ -27,7 +27,7 @@ public class IncorrectRequestService {
                 errors.put(fieldError.getCode(), fieldError.getDefaultMessage());
             }
 
-            return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
 
         return null;

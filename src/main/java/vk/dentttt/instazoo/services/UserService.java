@@ -81,7 +81,14 @@ public class UserService {
     }
 
     public User getUserById(Long userId) {
-        return userRepository.getById(userId);
+        return userRepository
+                .getUserById(userId)
+                .orElseThrow(() -> {
+                    log.debug("IN UserService:getUserById User with ID [{}] not found", userId);
+                    return new UsernameNotFoundException(
+                            "IN UserService:getUserById User with ID [" + userId + "] not found"
+                    );
+                });
     }
 
 }

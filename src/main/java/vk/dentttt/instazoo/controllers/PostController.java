@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,8 @@ import vk.dentttt.instazoo.services.PostService;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -29,13 +32,50 @@ public class PostController {
     private final IncorrectRequestService incorrectRequestService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createPost(@Valid @RequestBody PostDto postDto, Principal principal, BindingResult bindingResult) {
+    public ResponseEntity<?> createPost(
+            @Valid @RequestBody PostDto postDto,
+            Principal principal,
+            BindingResult bindingResult
+    ) {
         ResponseEntity<?> errors = incorrectRequestService.getValidationErrors(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) {
             return errors;
         }
 
         Post post = postService.createPost(postDto, principal);
-        return new ResponseEntity<>(postDtoConverter.convertPostToPostDto(post), HttpStatus.OK);
+        return new ResponseEntity<>(postDtoConverter.convertPostToPostDto(post), HttpStatus.CREATED);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<PostDto>> getAllPosts() {
+        List<PostDto> postDtoList = postService.getAllPosts()
+                                               .stream()
+                                               .map(postDtoConverter::convertPostToPostDto)
+                                               .collect(Collectors.toList());
+
+        return ResponseEntity.ok(postDtoList);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<PostDto>> getAllPostsForUser(Principal principal) {
+        List<PostDto> postsForUser = postService.getPostsForUser(principal)
+                                                .stream()
+                                                .map(postDtoConverter::convertPostToPostDto)
+                                                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(postsForUser);
+    }
+
+    @PostMapping("/{postId}/{username}/like")
+    public ResponseEntity<PostDto> likePost(
+            @PathVariable("postId") Long postId,
+            @PathVariable("username") String username,
+            Principal principal
+    ) {
+        Post post = postService.likePost(postId, principal);
+
+        return ResponseEntity.ok(postDtoConverter.convertPostToPostDto(post));
+    }
+
+
 }
