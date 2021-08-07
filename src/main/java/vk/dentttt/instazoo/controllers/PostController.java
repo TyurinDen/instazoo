@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vk.dentttt.instazoo.converters.PostToPostDtoConverter;
 import vk.dentttt.instazoo.dtos.PostDto;
+import vk.dentttt.instazoo.dtos.ResponseObject;
 import vk.dentttt.instazoo.entities.Post;
 import vk.dentttt.instazoo.services.IncorrectRequestService;
 import vk.dentttt.instazoo.services.PostService;
@@ -77,5 +79,10 @@ public class PostController {
         return ResponseEntity.ok(postDtoConverter.convertPostToPostDto(post));
     }
 
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<ResponseObject> deletePost(@PathVariable Long postId, Principal principal) {
+        postService.deletePost(postId, principal);
+        return ResponseEntity.ok(new ResponseObject("Post with ID:" + postId + " deleted"));
+    }
 
 }
