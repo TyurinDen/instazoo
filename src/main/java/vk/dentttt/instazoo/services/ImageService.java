@@ -57,6 +57,15 @@ public class ImageService {
         return imageRepository.save(image);
     }
 
+    public Image getProfileImage(Principal principal) {
+        User user = getUserByPrincipal(principal);
+        return imageRepository.findByUserId(user.getId()).orElse(null); // TODO надо возвращать дефолтное изображание
+    }
+
+    public Image getPostImage(Long postId) {
+        return imageRepository.findByPostId(postId).orElse(null); // TODO надо возвращать дефолтное изображание
+    }
+
     private User getUserByPrincipal(Principal principal) {
         String username = principal.getName();
         return userRepository
