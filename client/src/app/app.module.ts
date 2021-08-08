@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MaterialModule} from "./material-module";
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
+import {authInterceptorProviders} from "./helpers/auth-interceptor.service";
 
 @NgModule({
   declarations: [
@@ -20,7 +21,7 @@ import {FormsModule} from "@angular/forms";
     HttpClientModule,
     FormsModule
   ],
-  providers: [],
+  providers: [authInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
