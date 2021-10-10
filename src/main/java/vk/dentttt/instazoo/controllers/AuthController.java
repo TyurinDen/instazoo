@@ -33,7 +33,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/signup")
-    public ResponseEntity<Object> registerUser(@Valid @RequestBody SignupDto request, BindingResult bindingResult) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupDto request, BindingResult bindingResult) {
         if (requestValidator.getValidationErrors(bindingResult) != null) {
             return requestValidator.getValidationErrors(bindingResult);
         }
@@ -44,7 +44,7 @@ public class AuthController {
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginDto request, BindingResult bindingResult) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDto request, BindingResult bindingResult) {
         if (requestValidator.getValidationErrors(bindingResult) != null) {
             return requestValidator.getValidationErrors(bindingResult);
         }

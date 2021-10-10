@@ -13,7 +13,7 @@ import java.util.Map;
 @Service
 public class IncorrectRequestService {
 
-    public ResponseEntity<Object> getValidationErrors(BindingResult bindingResult) {
+    public ResponseEntity<Map<String, String>> getValidationErrors(BindingResult bindingResult) {
         Map<String, String> errors;
 
         if (bindingResult.hasErrors()) {
